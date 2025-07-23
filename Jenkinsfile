@@ -9,10 +9,6 @@ pipeline {
         DEPLOYMENT_YML = "k8s/deployment.yml"
     }
 
-    tools {
-        dockerTool 'Docker'
-    }
-
     stages {
         stage('Checkout Code') {
             steps {
