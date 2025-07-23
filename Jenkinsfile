@@ -18,7 +18,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $ECR_REPO:$IMAGE_TAG ./app"
+                sh "sudo docker build -t $ECR_REPO:$IMAGE_TAG ./app"
             }
         }
 
@@ -27,7 +27,6 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
                                   credentialsId: 'aws-credentials']]) {
                     sh '''
-                        aws configure set region $AWS_REGION
                         aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
                     '''
                 }
@@ -36,7 +35,7 @@ pipeline {
 
         stage('Push Image to ECR') {
             steps {
-                sh "docker push $ECR_REPO:$IMAGE_TAG"
+                sh "sudo docker push $ECR_REPO:$IMAGE_TAG"
             }
         }
 
@@ -51,13 +50,13 @@ pipeline {
 
         stage('Update Deployment YAML with new image') {
             steps {
-                sh 'sed -i "s|image: .*|image: ${ECR_REPO}:${IMAGE_TAG}|" ${DEPLOYMENT_YML}'
+                sh 'sudo sed -i "s|image: .*|image: ${ECR_REPO}:${IMAGE_TAG}|" ${DEPLOYMENT_YML}'
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                sh "kubectl apply -f $DEPLOYMENT_YML"
+                sh "sudo kubectl apply -f $DEPLOYMENT_YML"
             }
         }
     }
