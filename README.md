@@ -30,7 +30,7 @@ This project demonstrates how to:
 
 ##  **Create AWS Infrastructure**
 1. **Create S3 bucket** for Terraform backend:
-   ```bash
+```bash
    aws s3 mb s3://eyego-bucket
 ````
 
