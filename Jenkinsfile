@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION     = "us-east-1"
-        ECR_REPO       = "485492729952.dkr.ecr.us-east-1.amazonaws.com/eyego-app"
+        ECR_REPO       = "717279709688.dkr.ecr.us-east-1.amazonaws.com/eyego-repo"
         IMAGE_TAG      = "${BUILD_NUMBER}"
         CLUSTER_NAME   = "eyego-eks"
         DEPLOYMENT_YML = "k8s/deployment.yml"
