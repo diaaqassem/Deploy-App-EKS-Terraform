@@ -3,14 +3,10 @@ pipeline {
 
     environment {
         AWS_REGION     = "us-east-1"
-        ECR_REPO       = "485492729952.dkr.ecr.us-east-1.amazonaws.com/eyego-app"
+        ECR_REPO       = "717279709688.dkr.ecr.us-east-1.amazonaws.com/eyego-repo"
         IMAGE_TAG      = "${BUILD_NUMBER}"
         CLUSTER_NAME   = "eyego-eks"
         DEPLOYMENT_YML = "k8s/deployment.yml"
-    }
-
-    tools {
-        dockerTool 'Docker'
     }
 
     stages {
@@ -31,7 +27,6 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
                                   credentialsId: 'aws-credentials']]) {
                     sh '''
-                        aws configure set region $AWS_REGION
                         aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
                     '''
                 }
@@ -55,16 +50,17 @@ pipeline {
 
         stage('Update Deployment YAML with new image') {
             steps {
-                sh """
-                    sed -i 's|image: .*$|image: $ECR_REPO:$IMAGE_TAG|' $DEPLOYMENT_YML
-                """
+                sh 'sed -i "s|image: .*|image: ${ECR_REPO}:${IMAGE_TAG}|" ${DEPLOYMENT_YML}'
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                sh "kubectl apply -f $DEPLOYMENT_YML"
-            }
+               withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'aws-credentials']]){
+                     sh "kubectl apply -f $DEPLOYMENT_YML"
+        }
+    }
         }
     }
 
