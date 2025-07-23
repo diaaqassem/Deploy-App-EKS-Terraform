@@ -128,3 +128,9 @@ The `Jenkinsfile` automates:
 
 <img width="1366" height="165" alt="image" src="https://github.com/user-attachments/assets/50ae7721-a41e-4544-a158-3082143dc1f7" />
 
+
+5- Migration to Google Cloud Build(GCB)
+Replace AWS ECR with Google Container Registry(GCR).
+Replace Terraform EKS scripts with GKE Terraform modules.
+Replace aws eks update-kubeconfig with gcloud container clusters get-credentials.
+
