@@ -1,4 +1,4 @@
-```markdown
+
 #  Containerize, Deploy, and Automate a Simple Node.js App on AWS EKS
 
 ##  Project Overview
@@ -94,7 +94,6 @@ This project demonstrates how to:
    ```bash
    curl http://<LOADBALANCER_URL>
    return: Hello Eyego
-   <img width="1366" height="165" alt="image" src="https://github.com/user-attachments/assets/d9ae36c2-438d-4138-8344-253a9e3c8504" />
 
    ```
 
