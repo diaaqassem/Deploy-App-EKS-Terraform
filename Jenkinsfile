@@ -55,9 +55,7 @@ pipeline {
 
         stage('Update Deployment YAML with new image') {
             steps {
-                sh """
-                    sed -i 's|image: .*$|image: $ECR_REPO:$IMAGE_TAG|' $DEPLOYMENT_YML
-                """
+                sh 'sed -i "s|image: .*|image: ${ECR_REPO}:${IMAGE_TAG}|" ${DEPLOYMENT_YML}'
             }
         }
 
