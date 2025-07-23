@@ -126,4 +126,5 @@ The `Jenkinsfile` automates:
 ---
 <img width="1366" height="602" alt="image" src="https://github.com/user-attachments/assets/395deab5-f474-49b1-9944-2e6d84b9e993" />
 
+<img width="1366" height="165" alt="image" src="https://github.com/user-attachments/assets/50ae7721-a41e-4544-a158-3082143dc1f7" />
 
