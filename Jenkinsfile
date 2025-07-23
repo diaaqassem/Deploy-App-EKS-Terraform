@@ -56,7 +56,8 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
-               withCredentials(credentials: 'aws-credentials', region: "$AWS_REGION") {
+               withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'aws-credentials']]){
                      sh "kubectl apply -f $DEPLOYMENT_YML"
         }
     }
