@@ -14,17 +14,6 @@ output "cluster_endpoint" {
   value       = aws_eks_cluster.eks_cluster.endpoint
 }
 
-#output "cluster_version" {
-#  description = "The Kubernetes server version for the EKS cluster."
-#  value       = aws_eks_cluster.eks_cluster.version
-#}
-
-# EKS Node Group Outputs - Private
-#output "node_group_public_id" {
-#  description = "Node Group 1 ID"
-#  value       = aws_eks_node_group.eks_ng_public.id
-#}
-
 output "node_group_public_arn" {
   description = "Private Node Group ARN"
   value       = aws_eks_node_group.eks_ng_public.arn
