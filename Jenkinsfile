@@ -18,7 +18,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "sudo docker build -t $ECR_REPO:$IMAGE_TAG ./app"
+                sh "docker build -t $ECR_REPO:$IMAGE_TAG ./app"
             }
         }
 
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Push Image to ECR') {
             steps {
-                sh "sudo docker push $ECR_REPO:$IMAGE_TAG"
+                sh "docker push $ECR_REPO:$IMAGE_TAG"
             }
         }
 
@@ -50,13 +50,13 @@ pipeline {
 
         stage('Update Deployment YAML with new image') {
             steps {
-                sh 'sudo sed -i "s|image: .*|image: ${ECR_REPO}:${IMAGE_TAG}|" ${DEPLOYMENT_YML}'
+                sh 'sed -i "s|image: .*|image: ${ECR_REPO}:${IMAGE_TAG}|" ${DEPLOYMENT_YML}'
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                sh "sudo kubectl apply -f $DEPLOYMENT_YML"
+                sh "kubectl apply -f $DEPLOYMENT_YML"
             }
         }
     }
