@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION     = "us-east-1"
+        ECR_REPO       = "485492729952.dkr.ecr.us-east-1.amazonaws.com/eyego-app"
+        IMAGE_TAG      = "${BUILD_NUMBER}"
+        CLUSTER_NAME   = "eyego-eks"
+        DEPLOYMENT_YML = "k8s/deployment.yml"
+    }
+
+    tools {
+        dockerTool 'Docker'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git url: 'https://github.com/diaaqassem/Deploy-App-EKS-Terraform.git', branch: 'main'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t $ECR_REPO:$IMAGE_TAG ./app"
+            }
+        }
+
+        stage('Login to AWS ECR') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'aws-credentials']]) {
+                    sh '''
+                        aws configure set region $AWS_REGION
+                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+                    '''
+                }
+            }
+        }
+
+        stage('Push Image to ECR') {
+            steps {
+                sh "docker push $ECR_REPO:$IMAGE_TAG"
+            }
+        }
+
+        stage('Update Kubeconfig') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'aws-credentials']]) {
+                    sh "aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME"
+                }
+            }
+        }
+
+        stage('Update Deployment YAML with new image') {
+            steps {
+                sh """
+                    sed -i 's|image: .*$|image: $ECR_REPO:$IMAGE_TAG|' $DEPLOYMENT_YML
+                """
+            }
+        }
+
+        stage('Deploy to EKS') {
+            steps {
+                sh "kubectl apply -f $DEPLOYMENT_YML"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment completed successfully!'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
+}
