@@ -12,10 +12,9 @@ This project demonstrates how to:
 ---
 
 ##  **Project Structure**
-```
 <img width="242" height="267" alt="image" src="https://github.com/user-attachments/assets/736a6eae-8864-45a2-a70a-8353b2bd20b6" />
 
-````
+
 
 ---
 
